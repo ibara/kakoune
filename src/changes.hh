@@ -38,6 +38,12 @@ void update_forward(ConstArrayView<Buffer::Change> changes, RangeContainer& rang
             changes_tracker.update(*it++);
     };
 
+    auto cmp = [](auto& lhs, auto& rhs) {
+        if (get_first(lhs) == get_first(rhs))
+            return get_last(lhs) < get_last(lhs);
+        return get_first(lhs) < get_first(lhs);
+    };
+    kak_assert(std::is_sorted(ranges.begin(), ranges.end(), cmp));
     for (auto& range : ranges)
     {
         auto& first = get_first(range);
@@ -48,6 +54,7 @@ void update_forward(ConstArrayView<Buffer::Change> changes, RangeContainer& rang
         advance_while_relevant(last);
         last = changes_tracker.get_new_coord_tolerant(last);
     }
+    kak_assert(std::is_sorted(ranges.begin(), ranges.end(), cmp));
 }
 
 template<typename RangeContainer>
@@ -68,6 +75,12 @@ void update_backward(ConstArrayView<Buffer::Change> changes, RangeContainer& ran
         }
     };
 
+    auto cmp = [](auto& lhs, auto& rhs) {
+        if (get_first(lhs) == get_first(rhs))
+            return get_last(lhs) < get_last(lhs);
+        return get_first(lhs) < get_first(lhs);
+    };
+    kak_assert(std::is_sorted(ranges.begin(), ranges.end(), cmp));
     for (auto& range : ranges)
     {
         auto& first = get_first(range);
@@ -78,6 +91,7 @@ void update_backward(ConstArrayView<Buffer::Change> changes, RangeContainer& ran
         advance_while_relevant(last);
         last = changes_tracker.get_new_coord_tolerant(last);
     }
+    kak_assert(std::is_sorted(ranges.begin(), ranges.end(), cmp));
 }
 
 }
